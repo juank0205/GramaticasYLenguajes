@@ -1,33 +1,43 @@
 start: logicalexpression;
 
 logicalexpression:
-     '\(' logicalexpression '\)'
+     OPAR logicalexpression CPAR
     | '!' logicalexpression 
     |logicalexpression and logicalexpression
     |logicalexpression or logicalexpression
     |logicalexpression imp logicalexpression
-    |true
-    |false
+    |variable
+    |IF logicalexpression THEN logicalexpression
+    |IF logicalexpression THEN logicalexpression ELSE logicalexpression
     ;
 
-and:    'and'
-        |'\*'
+   
+variable: ID;
+
+ID: '[a-z]+' (%unless
+        AND1:   'and';
+        AND2:   '\*';
+        OR1:    'or';
+        OR2:    '\+';
+        IMP:    '=>';
+        DIMP:   '<=>';
+        OPAR:   '\(';
+        CPAR:   '\)';
+        IF:     'if';
+        ELSE:   'else';
+        THEN:   'then';
+    );
+
+and:    AND1
+        |AND2
         ;
 
-or:     'or'
-        |'\+'
+or:     OR1
+        |OR2
         ;
 
-imp:    '<=>'
-        |'=>'
-        ;
-
-true :  'true'
-        |'1'
-        ;
-
-false : 'false'
-        |'0'
+imp:    IMP    
+        |DIMP  
         ;
 
 //Python comments

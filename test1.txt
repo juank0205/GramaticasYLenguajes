@@ -1,2 +1,2 @@
 #Python comment
-!((true) and !(true + false))
+if expression then result
