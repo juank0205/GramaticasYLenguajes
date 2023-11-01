@@ -1,17 +1,21 @@
 start: logicalexpression;
 
+//expression
 logicalexpression:
-     OPAR logicalexpression CPAR
-    | '!' logicalexpression 
-    |logicalexpression and logicalexpression
-    |logicalexpression or logicalexpression
-    |logicalexpression imp logicalexpression
+     parexpr
+    |neg
+    |binexpr
+    |dimpexpr
+    |impexpr
     |variable
-    |IF logicalexpression THEN logicalexpression
-    |IF logicalexpression THEN logicalexpression ELSE logicalexpression
+    |ifexpr
+    |ifelseexpr
     ;
 
-   
+parexpr: OPAR logicalexpression CPAR;
+neg: '!' logicalexpression;
+
+//Variables   
 variable: ID;
 
 ID: '[a-z]+' (%unless
@@ -28,17 +32,32 @@ ID: '[a-z]+' (%unless
         THEN:   'then';
     );
 
-and:    AND1
+// Binary basic expressions
+binexpr:        
+        logicalexpression andexpr logicalexpression
+        |logicalexpression orexpr logicalexpression
+        |logicalexpression impexpr logicalexpression
+        ;
+
+// Implication expression
+impexpr: 
+        logicalexpression IMP logicalexpression;
+
+dimpexpr: 
+        logicalexpression DIMP logicalexpression;
+
+andexpr: AND1
         |AND2
         ;
 
-or:     OR1
+orexpr: OR1
         |OR2
         ;
 
-imp:    IMP    
-        |DIMP  
-        ;
+
+//Conditional expression
+ifexpr: IF logicalexpression THEN logicalexpression; 
+ifelseexpr: IF logicalexpression THEN logicalexpression ELSE logicalexpression; 
 
 //Python comments
 COMMENT: '\#''.*?''\n' (%ignore);
